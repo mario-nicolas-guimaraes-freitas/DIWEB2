@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALIDA CNPJ</title>
+</head>
+<body>
+    <form method="POST" name="cadastrar">
+        <p><b>Informe seu CNPJ a ser validado.</b></p>
+        <!-- (Por exemplo: 51620724000179) -->
+        <div>
+            <input id="cnpj" onkeyup="document.getElementById('validationCnpj').innerHTML = validaCNPJ(this.value)">
+            <b> <span id="validationCnpj"></span> </b>
+        </div>
+    </form>
+    <script>
+        function validaCNPJ (cnpj) {
+            var b = [6, 5, 4 ,3 ,2, 9, 8, 7, 6, 5, 4, 3, 2]
+            var c = String(cnpj).replace(/[^\d]/g,'')
+
+            if(c.length !== 14)
+            return "<b>Inválido</b>"
+
+            if(/0{14}/.test(c))
+            return "<b>Inválido</b>"
+
+            //cálculo do 1º DV
+
+            for(var i = 0, n = 0; i < 12; n += c[i] * b[++i] );
+
+            if(c[12] != (((n %= 11) < 2) ? 0 : 11 - n ))
+            return "<b>Inválido</b>"
+
+            //cálculo do 2º DV
+            for(var i = 0, n = 0; i <= 12; n += c[i] * b[i++] );
+
+            if(c[13] != (((n %= 11) < 2) ? 0 : 11 - n ))
+            return "<b>Inválido</b>"
+
+            return "<b>Ok</b>"
+        }
+    </script>
+</body>
+</html>
